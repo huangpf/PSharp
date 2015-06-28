@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="P# : a language for safer asynchronous .NET programming">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>P#</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/p-org/PSharp">View on GitHub</a>
+
+          <h1 id="project_title">P#</h1>
+          <h2 id="project_tagline">a language for safer asynchronous .NET programming</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/p-org/PSharp/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/p-org/PSharp/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="p" class="anchor" href="#p" aria-hidden="true"><span class="octicon octicon-link"></span></a>P#</h1>
+
+<p>P# is a new language for high-reliability asynchronous .NET programming, <em>co-designed</em> with a static data race analysis and testing infrastructure. The co-design aspect of P# allows us to combine language design, analysis and testing in a unique way: the state-machine structure of a P# program enables us to create a more precise and scalable static analysis; while the race-freedom guarantees, provided by our analysis, contribute to the feasibility of systematically exploring a P# program to find bugs (e.g. assertion failures and unhandled exceptions).</p>
+
+<h2>
+<a id="build-instructions" class="anchor" href="#build-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build instructions</h2>
+
+<ol>
+<li>Get Visual Studio 2015 Preview (required for Microsoft Roslyn).</li>
+<li>Clone this project and compile using VS2015.</li>
+<li>Get the <a href="https://www.microsoft.com/en-us/download/details.aspx?id=46850">Visual Studio 2015 SDK</a> to be able to compile the P# visual studio extension (syntax highlighting).</li>
+</ol>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<p>P# extends the C# language with state machines, states, state transitions and actions bindings. In P#, state machines are first class citizens and live in their own separate tasks. The only way they can communicate with each other is by explicitly sending and implicitly receiving events. As P# is based on C#, almost any valid C# code can be used in a P# method body (threading and code reflection APIs are not allowed).</p>
+
+<p>The P# compiler can be used to parse a program, statically analyse it for data races and finally compile it to an executable. To invoke the compiler use the following command:</p>
+
+<pre><code>.\PSharpCompiler.exe /s:${SOLUTION_PATH}\${SOLUTION_NAME}.sln
+</code></pre>
+
+<p>Where ${SOLUTION_PATH} is the path to your P# solution and ${SOLUTION_NAME} is the name of your P# solution.</p>
+
+<p>To specify an output path destination use the option <code>/o:${OUTPUT\_PATH}</code>.</p>
+
+<p>To compile only a specific project in the solution use the option <code>/p:${PROJECT_NAME}</code>.</p>
+
+<h2>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h2>
+
+<p>To see various available command line options use the option <code>/?</code>.</p>
+
+<p>To statically analyze the program for data races use the option <code>/analyze</code>.</p>
+
+<p>To systematically test the program for bugs (i.e. assertion failures and exceptions) use the option <code>/test</code>. You can optionally give the number of testing iterations to perform using <code>/i:value</code>.</p>
+
+<h2>
+<a id="publications" class="anchor" href="#publications" aria-hidden="true"><span class="octicon octicon-link"></span></a>Publications</h2>
+
+<ul>
+<li>
+<strong><a href="https://dl.acm.org/citation.cfm?id=2737996">Asynchronous Programming, Analysis and Testing with State Machines</a></strong>. Pantazis Deligiannis, Alastair F. Donaldson, Jeroen Ketema, Akash Lal and Paul Thomson. In the <em>ACM SIGPLAN Conference on Programming Language Design and Implementation</em> (PLDI), 2015.</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">P# maintained by <a href="https://github.com/p-org">p-org</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
