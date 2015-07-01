@@ -34,7 +34,16 @@
         <h1>
 <a id="p" class="anchor" href="#p" aria-hidden="true"><span class="octicon octicon-link"></span></a>P#</h1>
 
-<p>P# is a new language for high-reliability asynchronous .NET programming, <em>co-designed</em> with a static data race analysis and testing infrastructure. The co-design aspect of P# allows us to combine language design, analysis and testing in a unique way: the state-machine structure of a P# program enables us to create a more precise and scalable static analysis; while the race-freedom guarantees, provided by our analysis, contribute to the feasibility of systematically exploring a P# program to find bugs (e.g. assertion failures and unhandled exceptions).</p>
+<p><strong>P#</strong> is an <strong>actor-based</strong> programming language for developing <strong>highly-reliable asynchronous software</strong>, such as web-services and distributed systems.</p>
+
+<p>The language has <strong>four key capabilities</strong>:</p>
+
+<ul>
+<li>Enables the development of efficient asynchronous applications using an <strong>event-driven</strong>, actor-based programming model. Because <strong>all the asynchrony is explicitly exposed</strong> at specific communication points in a P# program, the user does not need to explicitly create and manage tasks; the P# runtime is instead responsible for handling all the underlying concurrency.</li>
+<li>Allows the environment to be <strong>modeled</strong> via language constructs. The compiler can then automatically substitute real code with modeled, and <strong>systematically test</strong> the compiled executable to discover bugs (such as assertion failures and uncaught exceptions).</li>
+<li>Provides strong <strong>data race freedom</strong> guarantees. The compiler is able to perform a <strong>scalable static data race analysis</strong> on the source code that can detect all potential data races in a program (based on certain assumptions, such as no use of non-P# threading or reflection).</li>
+<li>Fully interoperates with C#: the developer can <strong>write any C# code</strong> inside a P# program. P# is basically an extension of C#, build on top of the Roslyn and .NET frameworks, which not only makes P# easy to learn comparing with a completely new language, but also allows <strong>easy integration with existing code</strong>.</li>
+</ul>
 
 <h2>
 <a id="build-instructions" class="anchor" href="#build-instructions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build instructions</h2>
@@ -49,8 +58,6 @@
 <a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h2>
 
 <p>A good way to start is by reading the <a href="https://cdn.rawgit.com/p-org/PSharp/master/Docs/Manual/out/manual.pdf">manual</a>.</p>
-
-<p>P# extends the C# language with state machines, states, state transitions and actions bindings. In P#, state machines are first class citizens and live in their own separate tasks. The only way they can communicate with each other is by explicitly sending and implicitly receiving events. As P# is based on C#, almost any valid C# code can be used in a P# method body (threading and code reflection APIs are not allowed).</p>
 
 <p>The P# compiler can be used to parse a program, statically analyse it for data races and finally compile it to an executable. To invoke the compiler use the following command:</p>
 
