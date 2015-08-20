@@ -15,6 +15,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Microsoft.PSharp
         /// <summary>
         /// A map from unique machine ids to machines.
         /// </summary>
-        private static Dictionary<int, Machine> MachineMap;
+        private static ConcurrentDictionary<int, Machine> MachineMap;
 
         /// <summary>
         /// Ip address.
@@ -65,7 +66,7 @@ namespace Microsoft.PSharp
         /// </summary>
         static PSharpRuntime()
         {
-            PSharpRuntime.MachineMap = new Dictionary<int, Machine>();
+            PSharpRuntime.MachineMap = new ConcurrentDictionary<int, Machine>();
 
             MachineId.ResetMachineIDCounter();
 
@@ -189,7 +190,8 @@ namespace Microsoft.PSharp
                 mid.IpAddress = PSharpRuntime.IpAddress;
                 mid.Port = PSharpRuntime.Port;
 
-                PSharpRuntime.MachineMap.Add(mid.Value, machine as Machine);
+                bool added = PSharpRuntime.MachineMap.TryAdd(mid.Value, machine as Machine);
+                PSharpRuntime.Assert(added);
                 
                 Output.Debug(DebugType.Runtime, "<CreateLog> Machine {0}({1}) is created.",
                     type.Name, mid.Value);
