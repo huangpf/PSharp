@@ -106,17 +106,13 @@ namespace Microsoft.PSharp
         private Event RaisedEvent;
 
         /// <summary>
-        /// A map from event types, which the machine is currently waiting to
-        /// arrive, to optional actions that must execute when the corresponding
-        /// event arrives.
+        /// An event predicate that the machine is waiting for.
+        /// When an event in the Inbox satisfies the predicate,
+        /// the machine will receive the event and continue execution.
         /// </summary>
-        private Dictionary<Type, Action> EventWaiters;
+        private Predicate<Event> EventWaiterPredicate;
 
-        /// <summary>
-        /// Gets the received event and an optional associated action. If no event
-        /// has been received this will return null.
-        /// </summary>
-        private Tuple<Event, Action> ReceivedEventHandler;
+        private Event WaitedEvent;
 
         /// <summary>
         /// Gets the latest received event type. If no event has been
@@ -142,7 +138,6 @@ namespace Microsoft.PSharp
         {
             this.Inbox = new List<Event>();
             this.StateStack = new Stack<MachineState>();
-            this.EventWaiters = new Dictionary<Type, Action>();
 
             this.IsRunning = true;
             this.IsHalted = false;
@@ -278,28 +273,13 @@ namespace Microsoft.PSharp
         /// <summary>
         /// Blocks and waits to receive an event of the given types.
         /// </summary>
-        protected internal void Receive(params Type[] events)
+        protected internal object Receive(Predicate<Event> eventPredicate)
         {
-            foreach (var e in events)
-            {
-                this.EventWaiters.Add(e, null);
-            }
-
-            this.WaitOnEvent();
-        }
-
-        /// <summary>
-        /// Blocks and waits to receive an event of the given types, and
-        /// executes a given action on receiving the event.
-        /// </summary>
-        protected internal void Receive(params Tuple<Type, Action>[] events)
-        {
-            foreach (var e in events)
-            {
-                this.EventWaiters.Add(e.Item1, e.Item2);
-            }
-
-            this.WaitOnEvent();
+            this.EventWaiterPredicate = eventPredicate;
+            this.WaitOnEventFast();
+            object res = WaitedEvent.Payload;
+            WaitedEvent = null;
+            return res;
         }
 
         /// <summary>
@@ -432,13 +412,15 @@ namespace Microsoft.PSharp
                     return;
                 }
 
-                if (this.EventWaiters.ContainsKey(e.GetType()))
+                if (this.EventWaiterPredicate != null && this.EventWaiterPredicate(e))
                 {
                     Output.Debug(DebugType.Runtime, "<ReceiveLog> Machine '{0}({1})' received " +
                         "event '{2}' and unblocked.", this, base.Id.MVal, e.GetType().Name);
-                    this.ReceivedEventHandler = new Tuple<Event, Action>(
-                        e, this.EventWaiters[e.GetType()]);
-                    this.EventWaiters.Clear();
+
+                    Assert(this.WaitedEvent == null);
+                    // Note: e is never placed in Inbox.
+                    this.WaitedEvent = e;
+                    this.EventWaiterPredicate = null;
                     Machine.Dispatcher.NotifyReceivedEvent(this.Id);
                     return;
                 }
@@ -702,7 +684,7 @@ namespace Microsoft.PSharp
         /// <summary>
         /// Waits for an event to arrive.
         /// </summary>
-        private void WaitOnEvent()
+        private void WaitOnEventFast()
         {
             lock (this.Inbox)
             {
@@ -711,48 +693,44 @@ namespace Microsoft.PSharp
                 {
                     // Dequeues the first event that the machine waits
                     // to receive, if there is one in the inbox.
-                    if (this.EventWaiters.ContainsKey(this.Inbox[idx].GetType()))
+                    Event evt = this.Inbox[idx];
+                    if (EventWaiterPredicate(evt))
                     {
-                        this.ReceivedEventHandler = new Tuple<Event, Action>(
-                            this.Inbox[idx], this.EventWaiters[this.Inbox[idx].GetType()]);
-                        this.EventWaiters.Clear();
+                        this.EventWaiterPredicate = null;
                         this.Inbox.RemoveAt(idx);
+                        this.WaitedEvent = evt;
                         break;
                     }
                 }
             }
 
-            if (this.ReceivedEventHandler == null)
+            if (this.WaitedEvent == null)
             {
-                var events = "";
-                foreach (var ew in this.EventWaiters)
-                {
-                    events += " '" + ew.Key.Name + "'";
-                }
-
-                Output.Debug(DebugType.Runtime, "<ReceiveLog> Machine '{0}({1})' is " +
-                    "waiting on events:{2}.", this, base.Id.MVal, events);
-
                 Machine.Dispatcher.NotifyWaitEvent(this.Id);
             }
-            
-            this.HandleReceivedEvent();
+
+            Assert(this.WaitedEvent != null);
         }
 
         /// <summary>
-        /// Handles an event that the machine was waiting to arrive.
+        /// Waits the until WaitedEvent has been set.
+        /// Should only be called by Runtime (and not BugFindingRuntime).
         /// </summary>
-        private void HandleReceivedEvent()
+        internal void WaitUntilWaitedEventSet()
         {
-            var action = this.ReceivedEventHandler.Item2;
-            this.ReceivedEventHandler = null;
+            // This method may seem unnecessary,
+            // but we ideally must check WaitedEvent and
+            // lock the Inbox if we want to follow best practice.
 
-            // Execute the associated action, if there is one.
-            if (action != null)
+            lock (Inbox)
             {
-                action();
+                while (WaitedEvent == null)
+                {
+                    System.Threading.Monitor.Wait(Inbox);
+                }
             }
         }
+        
 
         /// <summary>
         /// Checks if the machine can handle the given event type. An event

@@ -298,18 +298,9 @@ namespace Microsoft.PSharp
         /// <summary>
         /// Blocks and waits to receive an event of the given types.
         /// </summary>
-        protected internal void Receive(params Type[] events)
+        protected internal object Receive(Predicate<Event> eventPredicate)
         {
-            this.Machine.Receive(events);
-        }
-
-        /// <summary>
-        /// Blocks and waits to receive an event of the given types, and
-        /// executes a given action on receiving the event.
-        /// </summary>
-        protected internal void Receive(params Tuple<Type, Action>[] events)
-        {
-            this.Machine.Receive(events);
+            return this.Machine.Receive(eventPredicate);
         }
 
         /// <summary>
