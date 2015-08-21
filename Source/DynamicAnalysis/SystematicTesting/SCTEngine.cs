@@ -161,7 +161,19 @@ namespace Microsoft.PSharp.DynamicAnalysis
                     }
 
                     // Start the test and wait for it to terminate.
+                    PSharpRuntime.Initialize();
+                    PSharpRuntime.BugFinder.NotifyNewTaskCreated(Task.CurrentId.Value, FakeMachine.Create());
+                    PSharpRuntime.BugFinder.TaskMap[Task.CurrentId.Value].IsActive = true;
                     AnalysisContext.TestMethod.Invoke(null, null);
+                    PSharpRuntime.BugFinder.TaskMap[Task.CurrentId.Value].IsBlocked = true;
+                    try
+                    {
+                        PSharpRuntime.BugFinder.Schedule(Task.CurrentId);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                    }
+
                     PSharpRuntime.WaitMachines();
 
                     // Runs the liveness checker to find any liveness property violations.
@@ -224,18 +236,18 @@ namespace Microsoft.PSharp.DynamicAnalysis
                     task.Wait();
                 }
             }
-            catch (AggregateException ex)
-            {
-                if (SCTEngine.HasRedirectedOutput)
-                {
-                    SCTEngine.ResetOutput();
-                }
-
-                Output.Debug(DebugType.Testing, ex.Message);
-                Output.Debug(DebugType.Testing, ex.StackTrace);
-                ErrorReporter.ReportAndExit("Internal systematic testing exception. " +
-                    "Please send a bug report to the developers.");
-            }
+//            catch (AggregateException ex)
+//            {
+//                if (SCTEngine.HasRedirectedOutput)
+//                {
+//                    SCTEngine.ResetOutput();
+//                }
+//
+//                Output.Debug(DebugType.Testing, ex.Message);
+//                Output.Debug(DebugType.Testing, ex.StackTrace);
+//                ErrorReporter.ReportAndExit("Internal systematic testing exception. " +
+//                    "Please send a bug report to the developers.");
+//            }
             finally
             {
                 Profiler.StopMeasuringExecutionTime();
@@ -344,5 +356,24 @@ namespace Microsoft.PSharp.DynamicAnalysis
         }
 
         #endregion
+    }
+
+    public class FakeMachine : Machine
+    {
+        public static FakeMachine Create()
+        {
+            return new FakeMachine();
+        }
+
+        [Start]
+        [OnEntry(nameof(FakeMachine.OnEntry))]
+        private class InitialState : MachineState
+        {
+        }
+
+        private void OnEntry()
+        {
+            
+        }
     }
 }

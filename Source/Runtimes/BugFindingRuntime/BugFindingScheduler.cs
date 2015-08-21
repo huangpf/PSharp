@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.PSharp.Threading;
@@ -49,7 +50,7 @@ namespace Microsoft.PSharp.Scheduling
         /// <summary>
         /// Map from task ids to task infos.
         /// </summary>
-        private Dictionary<int, TaskInfo> TaskMap;
+        public Dictionary<int, TaskInfo> TaskMap;
 
         /// <summary>
         /// Map from wrapped task ids to task infos.
@@ -104,7 +105,7 @@ namespace Microsoft.PSharp.Scheduling
         /// <param name="id">TaskId</param>
         internal void Schedule(int? id)
         {
-            if (id == null || id == PSharpRuntime.RootTaskId)
+            if (id == null)
             {
                 return;
             }
@@ -278,10 +279,10 @@ namespace Microsoft.PSharp.Scheduling
             Output.Debug(DebugType.Testing, "<ScheduleDebug> Created task {0} for machine {1}({2}).",
                 taskInfo.Id, taskInfo.Machine.GetType(), taskInfo.Machine.Id.MVal);
 
-            if (this.Tasks.Count == 0)
-            {
-                taskInfo.IsActive = true;
-            }
+//            if (this.Tasks.Count == 0)
+//            {
+//                taskInfo.IsActive = true;
+//            }
 
             this.Tasks.Add(taskInfo);
             this.TaskMap.Add(id, taskInfo);
@@ -534,13 +535,13 @@ namespace Microsoft.PSharp.Scheduling
                 task.IsActive = true;
                 task.IsEnabled = false;
 
-                if (!task.IsCompleted)
-                {
+                //if (!task.IsCompleted)
+                //{
                     lock (task)
                     {
                         System.Threading.Monitor.PulseAll(task);
                     }
-                }
+                //}
             }
         }
 
