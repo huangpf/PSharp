@@ -66,7 +66,7 @@ namespace Microsoft.PSharp
         /// <summary>
         /// The P# task machine scheduler.
         /// </summary>
-        internal static TaskMachineScheduler TaskScheduler;
+        internal static TaskScheduler TaskScheduler;
 
         /// <summary>
         /// The root task id.
@@ -284,7 +284,7 @@ namespace Microsoft.PSharp
         /// <param name="userTask">Task</param>
         internal static void TryCreateTaskMachine(Task userTask)
         {
-            var taskMachine = new TaskMachine(PSharpRuntime.TaskScheduler, userTask);
+            var taskMachine = new TaskMachine((TaskMachineScheduler) PSharpRuntime.TaskScheduler, userTask);
 
             var mid = taskMachine.Id;
             Output.Debug(DebugType.Runtime, "<CreateLog> TaskMachine({0}) is created.", mid.MVal);
@@ -505,7 +505,7 @@ namespace Microsoft.PSharp
         /// <summary>
         /// Initializes the P# runtime.
         /// </summary>
-        private static void Initialize()
+        public static void Initialize()
         {
             PSharpRuntime.RootTaskId = Task.CurrentId;
 
@@ -513,7 +513,8 @@ namespace Microsoft.PSharp
             PSharpRuntime.MachineMap = new Dictionary<int, Machine>();
             PSharpRuntime.Monitors = new List<Monitor>();
 
-            PSharpRuntime.TaskScheduler = new TaskMachineScheduler(PSharpRuntime.MachineTasks);
+
+            PSharpRuntime.TaskScheduler = TaskScheduler.Default;//new TaskMachineScheduler(PSharpRuntime.MachineTasks, PSharpRuntime.Lock);
             TaskMachineExtensions.TaskScheduler = PSharpRuntime.TaskScheduler;
 
             MachineId.ResetMachineIDCounter();

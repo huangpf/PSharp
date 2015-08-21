@@ -297,7 +297,7 @@ namespace Microsoft.PSharp.Threading
         /// The task scheduler that is responsible
         /// for executing a task machine.
         /// </summary>
-        internal static TaskMachineScheduler TaskScheduler;
+        internal static TaskScheduler TaskScheduler;
 
         /// <summary>
         /// Run the task on the P# task scheduler.
