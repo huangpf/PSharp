@@ -62,6 +62,7 @@
     <Compile Include="SystematicTesting\Schedulers\MaceMCStrategy.cs" />
     <Compile Include="SystematicTesting\Schedulers\IterativeDeepeningDFSStrategy.cs" />
     <Compile Include="SystematicTesting\Schedulers\DFSStrategy.cs" />
+    <Compile Include="SystematicTesting\Schedulers\DbRandStrategy.cs" />
     <Compile Include="SystematicTesting\Schedulers\RandomStrategy.cs" />
     <Compile Include="SystematicTesting\SchedulingStrategy.cs" />
     <Compile Include="SystematicTesting\SCTEngine.cs" />

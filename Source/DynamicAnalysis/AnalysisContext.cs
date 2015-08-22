@@ -119,6 +119,10 @@ namespace Microsoft.PSharp.DynamicAnalysis
             {
                 AnalysisContext.Strategy = SchedulingStrategy.MaceMC;
             }
+            else if (Configuration.SchedulingStrategy.Equals("dbrand"))
+            {
+                AnalysisContext.Strategy = SchedulingStrategy.DBRAND;
+            }
         }
 
         /// <summary>

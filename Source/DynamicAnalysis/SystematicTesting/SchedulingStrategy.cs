@@ -36,6 +36,8 @@ namespace Microsoft.PSharp.DynamicAnalysis
         /// MaceMC based search scheduling to detect
         /// potential liveness violations.
         /// </summary>
-        MaceMC = 3
+        MaceMC = 3,
+
+        DBRAND
     }
 }

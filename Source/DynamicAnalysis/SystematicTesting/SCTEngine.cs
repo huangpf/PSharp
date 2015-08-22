@@ -87,7 +87,8 @@ namespace Microsoft.PSharp.DynamicAnalysis
 
             if (AnalysisContext.Strategy == SchedulingStrategy.Random)
             {
-                SCTEngine.Strategy = new RandomStrategy(DateTime.Now.Millisecond);
+                SCTEngine.Strategy = new RandomStrategy(
+                    Configuration.Seed == -1 ? DateTime.Now.Millisecond : Configuration.Seed);
             }
             else if (AnalysisContext.Strategy == SchedulingStrategy.DFS)
             {
@@ -105,6 +106,12 @@ namespace Microsoft.PSharp.DynamicAnalysis
                 Configuration.FullExploration = false;
                 Configuration.CheckLiveness = true;
                 Configuration.CacheProgramState = false;
+            }
+            else if (AnalysisContext.Strategy == SchedulingStrategy.DBRAND)
+            {
+                SCTEngine.Strategy =
+                    new DbRandStrategy(Configuration.SchedulingBoundingBound,
+                        Configuration.Seed == -1 ? DateTime.Now.Millisecond : Configuration.Seed);
             }
 
             if (!Configuration.Debug.Contains(DebugType.Any) &&

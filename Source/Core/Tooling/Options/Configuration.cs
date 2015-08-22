@@ -139,6 +139,8 @@ namespace Microsoft.PSharp.Tooling
         /// </summary>
         public static string SchedulingStrategy;
 
+        public static int Seed;
+
         /// <summary>
         /// Number of scheduling iterations.
         /// </summary>
@@ -158,6 +160,8 @@ namespace Microsoft.PSharp.Tooling
         /// Safety prefix bound. By default it is 0.
         /// </summary>
         public static int SafetyPrefixBound;
+
+        public static int SchedulingBoundingBound;
 
         /// <summary>
         /// If true, then the dynamic analyzer will check if
@@ -237,10 +241,12 @@ namespace Microsoft.PSharp.Tooling
             Configuration.RunDynamicAnalysis = false;
             Configuration.AssembliesToBeAnalyzed = new List<string>();
             Configuration.SchedulingStrategy = "";
+            Configuration.Seed = -1;
             Configuration.SchedulingIterations = 1;
             Configuration.FullExploration = false;
             Configuration.DepthBound = 10000;
             Configuration.SafetyPrefixBound = 0;
+            Configuration.SchedulingBoundingBound = 2;
             Configuration.CheckLiveness = false;
             Configuration.PrintTrace = false;
             Configuration.SuppressTrace = false;
