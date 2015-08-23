@@ -730,7 +730,12 @@ namespace Microsoft.PSharp
                 }
             }
         }
-        
+
+        internal void PulseWaitedEvent()
+        {
+            System.Threading.Monitor.PulseAll(Inbox);
+        }
+
 
         /// <summary>
         /// Checks if the machine can handle the given event type. An event

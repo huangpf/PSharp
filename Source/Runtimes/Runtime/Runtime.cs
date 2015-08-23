@@ -325,10 +325,8 @@ namespace Microsoft.PSharp
         internal static void NotifyReceivedEvent(MachineId mid)
         {
             var machine = PSharpRuntime.MachineMap[mid.Value];
-            lock (machine)
-            {
-                System.Threading.Monitor.Pulse(machine);
-            }
+
+            machine.PulseWaitedEvent();
         }
 
         #endregion
