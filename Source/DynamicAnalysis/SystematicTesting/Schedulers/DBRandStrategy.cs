@@ -31,6 +31,8 @@ namespace Microsoft.PSharp.DynamicAnalysis.Scheduling
 
         public bool TryGetNext(out TaskInfo next, List<TaskInfo> tasks, TaskInfo currentTask)
         {
+            tasks = tasks.OrderBy(info => info.Machine.Id.Value).ToList();
+
             var orderedTasks = OrderedTaskList(tasks, currentTask);
             var availableTasks =
                 orderedTasks.Where(
@@ -132,6 +134,7 @@ namespace Microsoft.PSharp.DynamicAnalysis.Scheduling
             {
                 res.Add(tasks[(curr + i)%size]);
             }
+
             return res;
         } 
 
