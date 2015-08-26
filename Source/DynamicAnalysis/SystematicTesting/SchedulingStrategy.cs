@@ -38,6 +38,8 @@ namespace Microsoft.PSharp.DynamicAnalysis
         /// </summary>
         MaceMC = 3,
 
-        DBRAND
+        DBRAND,
+
+        PCT
     }
 }
