@@ -119,12 +119,6 @@ namespace Microsoft.PSharp.DynamicAnalysis
                     new SystematicTesting.Schedulers.PCTStrategy(Configuration.SchedulingBoundingBound,
                         Configuration.Seed == -1 ? DateTime.Now.Millisecond : Configuration.Seed);
             }
-            else if (AnalysisContext.Strategy == SchedulingStrategy.PCT)
-            {
-                SCTEngine.Strategy =
-                    new SystematicTesting.Schedulers.PCTStrategy(Configuration.SchedulingBoundingBound,
-                        Configuration.Seed == -1 ? DateTime.Now.Millisecond : Configuration.Seed);
-            }
 
 
             if (!Configuration.Debug.Contains(DebugType.Any) &&
