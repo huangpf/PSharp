@@ -9,6 +9,7 @@ namespace TaskParallelismCheck
         static void Main(string[] args)
         {
             Test.Execute();
+            Console.WriteLine("Done executing test");
             Console.ReadLine();
         }
 

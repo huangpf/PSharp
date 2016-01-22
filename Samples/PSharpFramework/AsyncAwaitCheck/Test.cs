@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.PSharp;
+using Microsoft.PSharp.Tooling;
+using System.Reflection;
 
 namespace AsyncAwaitCheck
 {
@@ -9,6 +11,7 @@ namespace AsyncAwaitCheck
         static void Main(string[] args)
         {
             Test.Execute();
+            Console.WriteLine("Done executing test");
             Console.ReadLine();
         }
 

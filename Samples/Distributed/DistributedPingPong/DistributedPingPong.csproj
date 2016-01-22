@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DistributedPingPong</RootNamespace>
     <AssemblyName>DistributedPingPong</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,10 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.PSharp">
-      <HintPath>..\..\..\Binaries\Release\Microsoft.PSharp.dll</HintPath>
+      <HintPath>..\..\..\Binaries\Debug\Microsoft.PSharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.PSharp.Runtime">
-      <HintPath>..\..\..\Binaries\Release\Microsoft.PSharp.Runtime.dll</HintPath>
+      <HintPath>..\..\..\Binaries\Debug\Microsoft.PSharp.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
