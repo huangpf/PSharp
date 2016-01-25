@@ -19,8 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.PSharp.Threading;
 using Microsoft.PSharp.Utilities;
+using Microsoft.PSharp.Threading;
 
 namespace Microsoft.PSharp.SystematicTesting.Scheduling
 {
