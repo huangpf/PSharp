@@ -18,9 +18,6 @@ namespace Raft
             configuration.ScheduleIntraMachineConcurrency = true;
 
             var engine = TestingEngine.Create(configuration, Test.Execute).Run();
-
-            //var runtime = PSharpRuntime.Create();
-            //Test.Execute(runtime);
             Console.ReadLine();
         }
 
